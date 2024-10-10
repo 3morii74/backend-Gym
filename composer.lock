@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8c804e4a8c3c1ea0e6dd61980c279cdd",
+    "content-hash": "85ed718bb22434bf2d40716c8a0665d3",
     "packages": [
         {
             "name": "brick/math",
@@ -3116,6 +3116,47 @@
                 }
             ],
             "time": "2024-04-27T21:32:50+00:00"
+        },
+        {
+            "name": "rateb/structure",
+            "version": "v2.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/RatebAlsaour/laravel-structure-craft.git",
+                "reference": "8e2c827c6e1e088cae3081451b60af15499eb366"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/RatebAlsaour/laravel-structure-craft/zipball/8e2c827c6e1e088cae3081451b60af15499eb366",
+                "reference": "8e2c827c6e1e088cae3081451b60af15499eb366",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "RatebSa\\Structure\\StructureServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "RatebSa\\Structure\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "strucure to filter and search",
+            "support": {
+                "issues": "https://github.com/RatebAlsaour/laravel-structure-craft/issues",
+                "source": "https://github.com/RatebAlsaour/laravel-structure-craft/tree/v2.5"
+            },
+            "time": "2024-10-06T20:27:13+00:00"
         },
         {
             "name": "symfony/clock",
