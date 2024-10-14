@@ -3,24 +3,30 @@
 namespace Modules\Location\Http\Requests;
 
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
-class UpdateNationalityRequest extends FormRequest
+class StoreCountryRequest extends FormRequest
 {
-
-
-
     /**
      * Get the validation rules that apply to the request.
      */
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'status' => 'required|in:active,inactive', // Adjust the statuses as per your application
-            // Add any other fields you want to validate
+            'name' => 'required|string|max:255|unique:countries,name',
+            'iso_code' => 'required|string|max:10|unique:countries,iso_code',
+            'status' => 'required|in:active,inactive',
+            'nationality_id' => 'required|integer|exists:nationalities,id', // Assuming there's a nationalities table
         ];
+    }
+
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
     }
 
     /**
@@ -38,13 +44,5 @@ class UpdateNationalityRequest extends FormRequest
             'message' => 'Validation failed!',
             'errors' => $errors
         ], 422));
-    }
-
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return true;
     }
 }

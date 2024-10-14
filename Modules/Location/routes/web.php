@@ -14,6 +14,3 @@ use Modules\Location\Http\Controllers\LocationController;
 |
 */
 
-Route::group([], function () {
-    Route::resource('location', LocationController::class)->names('location');
-});

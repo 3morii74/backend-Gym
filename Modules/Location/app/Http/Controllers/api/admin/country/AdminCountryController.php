@@ -9,6 +9,8 @@ use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 use Modules\Location\Repositories\Interface\LocationRepositoryInterface;
 use App\Http\Traits\ApiResponseTrait;
+use Modules\Location\Http\Requests\StoreCountryRequest;
+use Modules\Location\Http\Requests\UpdateCountryRequest;
 use Modules\Location\Transformers\CountryResource;
 
 class AdminCountryController extends Controller
@@ -30,7 +32,7 @@ class AdminCountryController extends Controller
         $Nationalities = $this->LocationRepository->searchAllCountry($request);
         return $this->apiResponse(CountryResource::collection($Nationalities), 200, "ok");
     }
-    public function store(Request $request)
+    public function store(StoreCountryRequest $request)
     {
         try {
             $Nationality =  $this->LocationRepository->storeCountry($request);
@@ -41,6 +43,7 @@ class AdminCountryController extends Controller
     }
     public function update(Request $request)
     {
+
         try {
             $Nationality =  $this->LocationRepository->updateCountry($request);
 

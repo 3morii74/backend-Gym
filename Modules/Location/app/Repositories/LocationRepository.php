@@ -34,7 +34,7 @@ class LocationRepository implements LocationRepositoryInterface
 
     public function searchAllNationality($request)
     {
-        return Nationality::where('name', 'like', '%' . $request->search . '%')
+        return Nationality::where('name', 'like', '%' . $request->name . '%')
             ->get();
     }
 
@@ -79,13 +79,13 @@ class LocationRepository implements LocationRepositoryInterface
     public function searchAllActiveCountry($request)
     {
         return Country::where('status', 'active')
-            ->where('name', 'like', '%' . $request->search . '%')
+            ->where('name', 'like', '%' . $request->name . '%')
             ->get();
     }
 
     public function searchAllCountry($request)
     {
-        return Country::where('name', 'like', '%' . $request->search . '%')
+        return Country::where('name', 'like', '%' . $request->name . '%')
             ->get();
     }
 

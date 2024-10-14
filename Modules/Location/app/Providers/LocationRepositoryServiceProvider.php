@@ -3,8 +3,8 @@
 namespace Modules\Location\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Modules\Location\Repositories\LocationRepositoryInterface;
-use App\Modules\Location\Repositories\LocationRepository;
+use Modules\Location\Repositories\interface\LocationRepositoryInterface;
+use Modules\Location\Repositories\LocationRepository;
 
 class LocationRepositoryServiceProvider extends ServiceProvider
 {

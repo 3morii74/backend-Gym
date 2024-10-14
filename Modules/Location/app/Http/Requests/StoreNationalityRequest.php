@@ -2,7 +2,9 @@
 
 namespace Modules\Location\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class StoreNationalityRequest extends FormRequest
 {
@@ -17,18 +19,21 @@ class StoreNationalityRequest extends FormRequest
         ];
     }
 
-    /**
-     * Customize the error messages for validation.
+   /**
+     * Handle a failed validation attempt.
      *
+     * @param Validator $validator
+     * @throws HttpResponseException
      */
-    public function messages(): array
+    protected function failedValidation(Validator $validator)
     {
-        return [
-            'name.required' => 'The nationality name is required.',
-            'name.unique' => 'The nationality name must be unique.',
-            'status.required' => 'The status is required.',
-            'status.in' => 'The status must be either active or inactive.',
-        ];
+        $errors = $validator->errors();
+
+        throw new HttpResponseException(response()->json([
+            'success' => false,
+            'message' => 'Validation failed!',
+            'errors' => $errors
+        ], 422));
     }
 
     /**
