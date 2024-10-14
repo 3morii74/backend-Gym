@@ -11,6 +11,9 @@ use Modules\Location\Repositories\Interface\LocationRepositoryInterface;
 use Modules\Location\Models\State;
 use Modules\Location\Transformers\StateResource;
 use Illuminate\Validation\ValidationException;
+use Modules\Location\Http\Requests\DeleteStateRequest;
+use Modules\Location\Http\Requests\StoreStateRequest;
+use Modules\Location\Http\Requests\UpdateStateRequest;
 
 class adminStateController extends Controller
 {
@@ -31,7 +34,7 @@ class adminStateController extends Controller
         $State = $this->LocationRepository->searchAllState($request);
         return $this->apiResponse(StateResource::collection($State), 200, "ok");
     }
-    public function store(Request $request)
+    public function store(StoreStateRequest $request)
     {
         try {
             $State =  $this->LocationRepository->storeState($request);
@@ -40,7 +43,7 @@ class adminStateController extends Controller
             return $this->apiResponse($e->errors(), 422, "Validation Error");
         }
     }
-    public function update(Request $request)
+    public function update(UpdateStateRequest $request)
     {
         try {
             $State =  $this->LocationRepository->updateState($request);
@@ -50,7 +53,7 @@ class adminStateController extends Controller
             return $this->apiResponse($e->errors(), 422, "Validation Error");
         }
     }
-    public function destroy(Request $request)
+    public function destroy(DeleteStateRequest $request)
     {
         try {
             $State =  $this->LocationRepository->deleteState($request);

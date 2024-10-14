@@ -42,7 +42,9 @@ class StoreCountryRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'success' => false,
             'message' => 'Validation failed!',
-            'errors' => $errors
-        ], 422));
+            'errors' => $errors,
+            'status' => '405',
+
+        ], 405));
     }
 }
