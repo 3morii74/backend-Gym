@@ -3,7 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-
+use Modules\Location\Repositories\Interface\LocationRepositoryInterface;
+use Modules\Location\Repositories\LocationRepository;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -11,7 +12,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(LocationRepositoryInterface::class, LocationRepository::class);
     }
 
     /**

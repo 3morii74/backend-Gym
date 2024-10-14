@@ -3,17 +3,14 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Location\Http\Controllers\LocationController;
 
-/*
- *--------------------------------------------------------------------------
- * API Routes
- *--------------------------------------------------------------------------
- *
- * Here is where you can register API routes for your application. These
- * routes are loaded by the RouteServiceProvider within a group which
- * is assigned the "api" middleware group. Enjoy building your API!
- *
-*/
+use Modules\Location\Http\Controllers\api\user\Nationality\NationalityController;
+use Modules\Location\Http\Controllers\api\admin\Nationality\AdminNationalityController;
 
-Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
-    Route::apiResource('location', LocationController::class)->names('location');
+Route::group(['prefix' => 'nationality'], function () {
+    Route::get("/search", [NationalityController::class, "search"]);
+    Route::get("/countries", [NationalityController::class, "getCountries"]);
+    Route::get("/", [NationalityController::class, "index"]);
+    Route::post("/store", [AdminNationalityController::class, "store"]);
+    Route::put("/update", [AdminNationalityController::class, "update"]);
+    Route::delete("/destroy", [AdminNationalityController::class, "destroy"]);
 });
