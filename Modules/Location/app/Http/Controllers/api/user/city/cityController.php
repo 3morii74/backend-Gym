@@ -7,7 +7,8 @@ use App\Http\Traits\ApiResponseTrait;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Modules\Location\Repositories\interface\LocationRepositoryInterface;
+use Modules\Location\Http\Requests\SearchCountryRequest;
+use Modules\Location\Repositories\Interface\LocationRepositoryInterface;
 use Modules\Location\Transformers\CityResource;
 
 class cityController extends Controller
@@ -24,7 +25,7 @@ class cityController extends Controller
         $cities = $this->LocationRepository->allActiveCity($request);
         return $this->apiResponse(CityResource::collection($cities), 200, "ok");
     }
-    public function search(Request $request)
+    public function search(SearchCountryRequest $request)
     {
         $cities = $this->LocationRepository->searchAllActiveCity($request);
         return $this->apiResponse(CityResource::collection($cities), 200, "ok");

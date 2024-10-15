@@ -13,8 +13,9 @@ class UpdateCountryRequest extends FormRequest
      */
     public function rules(): array
     {
-
         return [
+          
+            'id' => 'exists:countries,id',
             'name' => 'required|string|max:255|exists:countries,name,',
             'iso_code' => 'required|string|max:10|exists:countries,iso_code,',
             'status' => 'required|in:active,inactive',
@@ -43,7 +44,8 @@ class UpdateCountryRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'success' => false,
             'message' => 'Validation failed!',
-            'errors' => $errors
-        ], 422));
+            'errors' => $errors,
+            'status' => '405',
+        ], 405));
     }
 }

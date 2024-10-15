@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class StoreNationalityRequest extends FormRequest
+class StoreCityRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,9 +14,18 @@ class StoreNationalityRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255|unique:nationalities,name',
-            'status' => 'required|in:active,inactive',
+            'name' => 'required|string|max:255|unique:cities,name', // Ensure name is unique in the states table
+            'status' => 'required|in:active,inactive', // Validate status as either 'active' or 'inactive'
+            'state_id' => 'required|integer|exists:states,id', // Validate that country_id exists in countries table
         ];
+    }
+
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
     }
 
     /**
@@ -34,14 +43,7 @@ class StoreNationalityRequest extends FormRequest
             'message' => 'Validation failed!',
             'errors' => $errors,
             'status' => '405',
-        ], 405));
-    }
 
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return true;
+        ], 405));
     }
 }

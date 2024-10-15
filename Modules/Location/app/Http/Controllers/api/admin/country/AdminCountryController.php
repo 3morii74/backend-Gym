@@ -9,6 +9,7 @@ use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 use Modules\Location\Repositories\Interface\LocationRepositoryInterface;
 use App\Http\Traits\ApiResponseTrait;
+use Modules\Location\Http\Requests\DeleteCountryRequest;
 use Modules\Location\Http\Requests\StoreCountryRequest;
 use Modules\Location\Http\Requests\UpdateCountryRequest;
 use Modules\Location\Transformers\CountryResource;
@@ -52,7 +53,7 @@ class AdminCountryController extends Controller
             return $this->apiResponse($e->errors(), 422, "Validation Error");
         }
     }
-    public function destroy(Request $request)
+    public function destroy(DeleteCountryRequest $request)
     {
         try {
             $Nationality =  $this->LocationRepository->deleteCountry($request);
