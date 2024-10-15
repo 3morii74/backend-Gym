@@ -1,5 +1,6 @@
 {
     "Location": true,
     "User": true,
-    "Gallary": true
+    "Gallary": true,
+    "Post": true
 }
