@@ -27,3 +27,5 @@ Route::post('email/resend-otp', function (Request $request) {
 
     return response()->json(['message' => 'Verification OTP resent.'], 200);
 })->middleware('auth:api');
+Route::post('password/otp', [AuthController::class, 'sendOtp']);
+Route::post('password/reset-otp', [AuthController::class, 'resetPassword']);

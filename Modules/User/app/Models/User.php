@@ -9,8 +9,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Model implements JWTSubject,  MustVerifyEmail
+class User  extends Authenticatable implements JWTSubject,  MustVerifyEmail
 {
     use HasFactory;
     use SoftDeletes;
@@ -28,19 +29,32 @@ class User extends Model implements JWTSubject,  MustVerifyEmail
         'status',
         'email_verified_at',
         'email_otp',
-        'email_otp_expires_at'
+        'email_otp_expires_at',
+        'password_reset_otp',
+        'password_reset_otp_expires_at'
     ];
     protected $hidden = [
         'password',
         'email_otp',
         'email_otp_expires_at'
     ];
-    protected function casts(): array
+    protected $casts = [
+        'email_otp_expires_at' => 'datetime',
+        'password_reset_otp_expires_at' => 'datetime',
+        'birth_date' => 'datetime',
+        'password' => 'hashed'
+    ];
+    public function generatePasswordResetOtp()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        $this->password_reset_otp = rand(100000, 999999); // Generate a 6-digit OTP
+        $this->password_reset_otp_expires_at = now()->addMinutes(10); // OTP expires in 10 minutes
+        $this->save();
+    }
+
+    // Method to check if the OTP is valid
+    public function hasValidPasswordResetOtp($otp)
+    {
+        return $this->password_reset_otp === $otp && $this->password_reset_otp_expires_at->isFuture();
     }
     public function generateOtp()
     {
@@ -54,7 +68,7 @@ class User extends Model implements JWTSubject,  MustVerifyEmail
 
     public function hasValidOtp($otp)
     {
-        return $this->email_otp === $otp && $this->email_otp_expires_at->isFuture();
+        return $this->email_otp == $otp && $this->email_otp_expires_at->isFuture();
     }
     public function getJWTIdentifier()
     {
