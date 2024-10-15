@@ -10,6 +10,7 @@ use Illuminate\Http\Response;
 use Modules\Location\Repositories\Interface\LocationRepositoryInterface;
 use Modules\Location\Transformers\NationalityResource;
 use Exception;
+use Modules\Location\Http\Requests\SearchCountryRequest;
 
 class NationalityController extends Controller
 {
@@ -32,7 +33,7 @@ class NationalityController extends Controller
         }
     }
 
-    public function search(Request $request)
+    public function search(SearchCountryRequest $request)
     {
         try {
             $Nationalities = $this->LocationRepository->searchAllNationality($request);

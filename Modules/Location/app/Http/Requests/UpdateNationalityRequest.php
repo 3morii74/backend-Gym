@@ -17,6 +17,7 @@ class UpdateNationalityRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'id'=> 'exists:nationalities,id',
             'name' => 'required|string|max:255',
             'status' => 'required|in:active,inactive', // Adjust the statuses as per your application
             // Add any other fields you want to validate
@@ -36,8 +37,9 @@ class UpdateNationalityRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'success' => false,
             'message' => 'Validation failed!',
-            'errors' => $errors
-        ], 422));
+            'errors' => $errors,
+            'status'=>'405',
+        ], 405));
     }
 
     /**

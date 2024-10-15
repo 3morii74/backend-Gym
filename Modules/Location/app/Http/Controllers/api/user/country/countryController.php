@@ -3,12 +3,13 @@
 namespace Modules\Location\Http\Controllers\api\user\country;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Modules\Location\Repositories\Interface\LocationRepositoryInterface;
 use App\Http\Traits\ApiResponseTrait;
+use Modules\Location\Http\Requests\SearchCountryRequest;
 use Modules\Location\Transformers\CountryResource;
+use Exception;
 
 class countryController extends Controller
 {
@@ -19,20 +20,43 @@ class countryController extends Controller
     {
         $this->LocationRepository = $LocationRepository;
     }
+
+    /**
+     * Get all active countries.
+     */
     public function index(Request $request)
     {
-        $Countries = $this->LocationRepository->allActiveCountry($request);
-        return $this->apiResponse(CountryResource::collection($Countries), 200, "ok");
+        try {
+            $Countries = $this->LocationRepository->allActiveCountry($request);
+            return $this->apiResponse(CountryResource::collection($Countries), 200, "ok");
+        } catch (Exception $e) {
+            return $this->apiResponse(null, 500, "An error occurred while fetching countries: " . $e->getMessage());
+        }
     }
-    public function search(Request $request)
+
+    /**
+     * Search for active countries based on request.
+     */
+    public function search(SearchCountryRequest $request)
     {
-        $Countries = $this->LocationRepository->searchAllActiveCountry($request);
-        return $this->apiResponse(CountryResource::collection($Countries), 200, "ok");
+        try {
+            $Countries = $this->LocationRepository->searchAllActiveCountry($request);
+            return $this->apiResponse(CountryResource::collection($Countries), 200, "ok");
+        } catch (Exception $e) {
+            return $this->apiResponse(null, 500, "An error occurred while searching for countries: " . $e->getMessage());
+        }
     }
+
+    /**
+     * Get states of a country.
+     */
     public function getStates(Request $request)
     {
-
-        $states = $this->LocationRepository->getStateFromCountry($request);
-        return $this->apiResponse(CountryResource::collection($states), 200, "ok");
+        try {
+            $states = $this->LocationRepository->getStateFromCountry($request);
+            return $this->apiResponse(CountryResource::collection($states), 200, "ok");
+        } catch (Exception $e) {
+            return $this->apiResponse(null, 500, "An error occurred while fetching states: " . $e->getMessage());
+        }
     }
 }

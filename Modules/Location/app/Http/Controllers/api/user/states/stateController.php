@@ -7,6 +7,7 @@ use App\Http\Traits\ApiResponseTrait;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Modules\Location\Http\Requests\SearchCountryRequest;
 use Modules\Location\Repositories\Interface\LocationRepositoryInterface;
 use Modules\Location\Transformers\StateResource;
 
@@ -24,7 +25,7 @@ class stateController extends Controller
         $states = $this->LocationRepository->allActiveState($request);
         return $this->apiResponse(StateResource::collection($states), 200, "ok");
     }
-    public function search(Request $request)
+    public function search(SearchCountryRequest $request)
     {
         $states = $this->LocationRepository->searchAllActiveState($request);
         return $this->apiResponse(StateResource::collection($states), 200, "ok");

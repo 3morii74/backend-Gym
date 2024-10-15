@@ -9,6 +9,9 @@ use Illuminate\Http\Response;
 use App\Http\Traits\ApiResponseTrait;
 use Modules\Location\Repositories\Interface\LocationRepositoryInterface;
 use Illuminate\Validation\ValidationException;
+use Modules\Location\Http\Requests\DeleteCityRequest;
+use Modules\Location\Http\Requests\StoreCityRequest;
+use Modules\Location\Http\Requests\UpdateCityRequest;
 use Modules\Location\Transformers\CityResource;
 
 class adminCityController extends Controller
@@ -30,7 +33,7 @@ class adminCityController extends Controller
         $City = $this->LocationRepository->searchAllCity($request);
         return $this->apiResponse(CityResource::collection($City), 200, "ok");
     }
-    public function store(Request $request)
+    public function store(StoreCityRequest $request)
     {
         try {
             $City =  $this->LocationRepository->storeCity($request);
@@ -39,7 +42,7 @@ class adminCityController extends Controller
             return $this->apiResponse($e->errors(), 422, "Validation Error");
         }
     }
-    public function update(Request $request)
+    public function update(UpdateCityRequest $request)
     {
         try {
             $City =  $this->LocationRepository->updateCity($request);
@@ -49,7 +52,7 @@ class adminCityController extends Controller
             return $this->apiResponse($e->errors(), 422, "Validation Error");
         }
     }
-    public function destroy(Request $request)
+    public function destroy(DeleteCityRequest $request)
     {
         try {
             $City =  $this->LocationRepository->deleteCity($request);

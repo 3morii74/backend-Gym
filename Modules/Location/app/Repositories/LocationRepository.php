@@ -22,7 +22,7 @@ class LocationRepository implements LocationRepositoryInterface
 
     public function getCountryFromNationality($request)
     {
-        return Country::where('nationality_id', $request->nationality_id)->get();
+        return Country::where('nationality_id', $request->id)->get();
     }
 
     public function searchAllActiveNationality($request)
@@ -73,8 +73,15 @@ class LocationRepository implements LocationRepositoryInterface
 
     public function getStateFromCountry($request)
     {
-        return State::where('country_id', $request->country_id)->get();
+        $states = State::where('country_id', $request->id)->get();
+
+        if ($states->isEmpty()) {
+            throw new \Exception("No states found for the given country ID: " . $request->id);
+        }
+
+        return $states;
     }
+
 
     public function searchAllActiveCountry($request)
     {
@@ -124,13 +131,13 @@ class LocationRepository implements LocationRepositoryInterface
 
     public function getCityFromState($request)
     {
-        return City::where('state_id', $request->state_id)->get();
+        return City::where('state_id', $request->id)->get();
     }
 
     public function searchAllActiveState($request)
     {
         return State::where('status', 'active')
-            ->where('name', 'like', '%' . $request->search . '%')
+            ->where('name', 'like', '%' . $request->name . '%')
             ->get();
     }
 
@@ -176,7 +183,7 @@ class LocationRepository implements LocationRepositoryInterface
     public function searchAllActiveCity($request)
     {
         return City::where('status', 'active')
-            ->where('name', 'like', '%' . $request->search . '%')
+            ->where('name', 'like', '%' . $request->name . '%')
             ->get();
     }
 
