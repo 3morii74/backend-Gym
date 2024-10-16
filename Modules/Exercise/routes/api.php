@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Exercise\Http\Controllers\admin\AdminMuscleCategoryController;
 use Modules\Exercise\Http\Controllers\ExerciseController;
+use Modules\Exercise\Http\Controllers\user\MuscleCategoryController;  
 
 /*
  *--------------------------------------------------------------------------
@@ -14,6 +16,10 @@ use Modules\Exercise\Http\Controllers\ExerciseController;
  *
 */
 
-Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
-    Route::apiResource('exercise', ExerciseController::class)->names('exercise');
+Route::group(['prefix' => 'muscleCategory'], function () {
+    Route::get("/search", [MuscleCategoryController::class, "search"]);
+    Route::get("/", [MuscleCategoryController::class, "index"]);
+    Route::post("/store", [AdminMuscleCategoryController::class, "store"]);
+    Route::put("/update", [AdminMuscleCategoryController::class, "update"]);
+    Route::delete("/destroy", [AdminMuscleCategoryController::class, "destroy"]);
 });

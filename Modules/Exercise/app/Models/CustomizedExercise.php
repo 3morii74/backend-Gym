@@ -4,10 +4,12 @@ namespace Modules\Exercise\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CustomizedExercise extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $fillable = ['name', 'description', 'user_id', 'strength_percentage'];
 
@@ -23,7 +25,6 @@ class CustomizedExercise extends Model
 
     public function exerciseSystems()
     {
-        return $this->belongsToMany(ExerciseSystemCustomized::class, 'exercise_system_defaults_customized_exercise')
-            ->withTimestamps();
+        return $this->morphToMany(ExerciseSystemCustomized::class, 'exerciseable', 'exercise_system_exercise');
     }
 }

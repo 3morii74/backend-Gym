@@ -1,10 +1,15 @@
 <?php
 namespace Modules\Exercise\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ExerciseSystemCustomized extends Model
 {
+
+    use HasFactory;
+    use SoftDeletes;
     // Define the table name if it's not the plural form of the model name
     protected $table = 'exercise_system_customizeds';
 
@@ -14,14 +19,10 @@ class ExerciseSystemCustomized extends Model
         'description',
     ];
 
-    /**
-     * Relationship: One-to-Many with CustomizedExercises
-     * An ExerciseSystemCustomized can have many customized exercises.
-     */
+
     public function customizedExercises()
     {
-        return $this->belongsToMany(CustomizedExercise::class, 'customized_exercise_exercise_system_customized', 'system_id', 'exercise_id')
-                    ->withPivot('strength_percentage'); // Include pivot column if necessary
+        return $this->morphedByMany(CustomizedExercise::class, 'exerciseable', 'exercise_system_exercise');
     }
 
     /**

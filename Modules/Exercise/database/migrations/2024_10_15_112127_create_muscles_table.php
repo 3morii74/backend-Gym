@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('muscles', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('muscle_category_id')->constrained()->onDelete('cascade');
+            $table->foreignId('muscle_category_id')->constrained('muscle_categories')->onDelete('cascade');
             $table->string('name')->unique();
             $table->softDeletes();
             $table->timestamps();

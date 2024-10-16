@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('exercise_system_default_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('exercise_system_customized_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('exercise_id'); // Depending on the exercise type
+            $table->softDeletes();
             $table->timestamps();
 
             // Ensure either default or customized system is set

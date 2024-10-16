@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('user_system_exercise_id')->constrained()->onDelete('cascade');
             $table->integer('reps');
             $table->decimal('weight', 8, 2);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

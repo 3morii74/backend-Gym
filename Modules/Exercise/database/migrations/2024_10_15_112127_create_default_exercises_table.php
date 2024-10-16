@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->text('description')->nullable();
-            $table->foreignId('muscle_id')->constrained()->onDelete('cascade');
+            $table->foreignId('muscle_id')->constrained('muscles')->onDelete('cascade');
             $table->float('strength_percentage')->default(0); // Add this line
+            $table->softDeletes();
             $table->timestamps();
         });
     }
