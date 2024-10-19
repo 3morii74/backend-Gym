@@ -18,11 +18,12 @@ class Muscle extends Model
 
     public function defaultExercises()
     {
-        return $this->belongsToMany(DefaultExercise::class, 'muscle_default_exercise');
+        return $this->belongsToMany(DefaultExercise::class, 'muscle_default_exercise', 'muscle_id', 'default_exercise_id');
     }
 
     public function customizedExercises()
     {
-        return $this->belongsToMany(CustomizedExercise::class, 'muscle_customized_exercise');
+        return $this->belongsToMany(CustomizedExercise::class, 'muscle_customized_exercise','muscle_id', 'customized_exercise_id');
     }
+    
 }

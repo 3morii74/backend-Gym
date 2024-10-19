@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Exercise\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,11 +11,11 @@ class DefaultExercise extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['name', 'description','strength_percentage'];
+    protected $fillable = ['name', 'description', 'strength_percentage', 'muscle_id'];
 
     public function muscles()
     {
-        return $this->belongsToMany(Muscle::class, 'muscle_default_exercise');
+        return $this->belongsToMany(Muscle::class, 'muscle_default_exercise', 'default_exercise_id', 'muscle_id');
     }
 
     public function exerciseSystems()

@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
 
-class   UpdateMuscleCategoryRequest extends FormRequest
+class MuscleByCategoryRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -22,13 +22,6 @@ class   UpdateMuscleCategoryRequest extends FormRequest
                     $query->whereNull('deleted_at'); // Ensure the ID exists only in non-deleted rows
                 }),
             ],
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('muscle_categories')->whereNull('deleted_at')->ignore($this->id), // Ignore the current record based on the id from the request
-            ],
-            'description' => 'nullable|string|max:1000', // Description is optional, max length of 1000
         ];
     }
 
@@ -39,6 +32,7 @@ class   UpdateMuscleCategoryRequest extends FormRequest
     {
         return true;
     }
+
     /**
      * Handle a failed validation attempt.
      *
@@ -53,7 +47,7 @@ class   UpdateMuscleCategoryRequest extends FormRequest
             'success' => false,
             'message' => 'Validation failed!',
             'errors' => $errors,
-            'status' => '422',
-        ], 422));
+            'status' => '405',
+        ], 405));
     }
 }

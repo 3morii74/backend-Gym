@@ -5,9 +5,8 @@ namespace Modules\Exercise\Http\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Validation\Rule;
 
-class   UpdateMuscleCategoryRequest extends FormRequest
+class DeleteDefaultExerciseRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -15,20 +14,8 @@ class   UpdateMuscleCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => [
-                'required',
-                'integer',
-                Rule::exists('muscle_categories')->where(function ($query) {
-                    $query->whereNull('deleted_at'); // Ensure the ID exists only in non-deleted rows
-                }),
-            ],
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('muscle_categories')->whereNull('deleted_at')->ignore($this->id), // Ignore the current record based on the id from the request
-            ],
-            'description' => 'nullable|string|max:1000', // Description is optional, max length of 1000
+            'id' => 'required|integer|exists:default_exercises,id', // Validate that id exists in countries table
+
         ];
     }
 
@@ -39,6 +26,7 @@ class   UpdateMuscleCategoryRequest extends FormRequest
     {
         return true;
     }
+    
     /**
      * Handle a failed validation attempt.
      *
@@ -53,7 +41,7 @@ class   UpdateMuscleCategoryRequest extends FormRequest
             'success' => false,
             'message' => 'Validation failed!',
             'errors' => $errors,
-            'status' => '422',
-        ], 422));
+            'status' => '405',
+        ], 405));
     }
 }

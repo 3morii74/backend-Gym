@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('sets', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_system_exercise_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_system_exercise_id')->constrained('user_system_exercises')->onDelete('cascade');
             $table->integer('reps');
             $table->decimal('weight', 8, 2);
             $table->softDeletes();

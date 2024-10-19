@@ -10,11 +10,11 @@ class MuscleCategory extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    
+
     protected $fillable = ['name'];
 
     public function muscles()
     {
-        return $this->hasMany(Muscle::class);
+        return $this->hasMany(Muscle::class, 'muscle_category_id');
     }
 }

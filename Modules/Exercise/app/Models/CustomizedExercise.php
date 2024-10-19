@@ -15,7 +15,7 @@ class CustomizedExercise extends Model
 
     public function muscles()
     {
-        return $this->belongsToMany(Muscle::class, 'muscle_customized_exercise');
+        return $this->belongsToMany(Muscle::class, 'muscle_customized_exercise', 'customized_exercise_id', 'muscle_id');
     }
 
     // public function user()

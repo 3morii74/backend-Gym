@@ -5,6 +5,7 @@ namespace Modules\Exercise\Http\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class StoreMuscleCategoryRequest extends FormRequest
 {
@@ -14,8 +15,13 @@ class StoreMuscleCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255|unique:muscle_categories,name', // Name is required, string, max 255, unique
-            'description' => 'nullable|string|max:1000', // Description is optional, string, max 1000
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('muscle_categories')->whereNull('deleted_at'), // Check uniqueness only on non-deleted rows
+            ],
+            'description' => 'nullable|string|max:1000',
         ];
     }
 
@@ -41,8 +47,8 @@ class StoreMuscleCategoryRequest extends FormRequest
             'success' => false,
             'message' => 'Validation failed!',
             'errors' => $errors,
-            'status' => '405',
+            'status' => '422',
 
-        ], 405));
+        ], 422));
     }
 }

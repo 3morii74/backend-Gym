@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('muscle_default_exercise', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('default_exercise_id')->constrained()->onDelete('cascade');
-            $table->foreignId('muscle_id')->constrained()->onDelete('cascade');
+            $table->foreignId('default_exercise_id')->constrained('default_exercises')->onDelete('cascade');
+            $table->foreignId('muscle_id')->constrained('muscles')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
 
@@ -23,8 +23,8 @@ return new class extends Migration
 
         Schema::create('muscle_customized_exercise', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customized_exercise_id')->constrained()->onDelete('cascade');
-            $table->foreignId('muscle_id')->constrained()->onDelete('cascade');
+            $table->foreignId('customized_exercise_id')->constrained('customized_exercises')->onDelete('cascade');
+            $table->foreignId('muscle_id')->constrained('muscles')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
 
@@ -37,8 +37,8 @@ return new class extends Migration
             $table->morphs('exerciseable'); // Will create exerciseable_id and exerciseable_type
 
             // Foreign key to ExerciseSystemDefault or ExerciseSystemCustomized
-            $table->foreignId('exercise_system_default_id')->nullable()->constrained()->onDelete('cascade');
-            $table->foreignId('exercise_system_customized_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('exercise_system_default_id')->nullable()->constrained('exercise_system_defaults')->onDelete('cascade');
+            $table->foreignId('exercise_system_customized_id')->nullable()->constrained('exercise_system_customized')->onDelete('cascade');
 
             $table->timestamps();
             $table->softDeletes();

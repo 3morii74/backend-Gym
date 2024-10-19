@@ -20,7 +20,7 @@ class AdminMuscleCategoryController extends Controller
     public function store(StoreMuscleCategoryRequest $request)
     {
         try {
-            $muscleCategory = MuscleCategory::create($request); // Create a new muscle category
+            $muscleCategory = MuscleCategory::create($request->all()); // Create a new muscle category
             return $this->apiResponse($muscleCategory, 201, "Muscle category created successfully");
         } catch (ValidationException $e) {
             return $this->apiResponse($e->errors(), 422, "Validation Error");
@@ -31,7 +31,7 @@ class AdminMuscleCategoryController extends Controller
     {
         try {
             $muscleCategory = MuscleCategory::findOrFail($request->id); // Find the muscle category by ID
-            $muscleCategory->update($request); // Update the muscle category
+            $muscleCategory->update($request->all()); // Update the muscle category
             return $this->apiResponse($muscleCategory, 200, "Muscle category updated successfully");
         } catch (ValidationException $e) {
             return $this->apiResponse($e->errors(), 422, "Validation Error");

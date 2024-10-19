@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('muscles', function (Blueprint $table) {
+        Schema::create('muscle_categories', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('muscle_category_id')->constrained('muscle_categories')->onDelete('cascade');
-            $table->string('name')->unique();
+            $table->string('name');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('muscles');
+        Schema::dropIfExists('muscle_categories');
     }
 };
