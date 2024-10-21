@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Middleware\EnsureApiAuthenticated;
+use App\Http\Middleware\EnsureEmailVerified;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -9,8 +11,9 @@ use Modules\User\Notifications\SendEmailOtpNotification;
 
 // API Routes
 
-Route::group(['middleware' => ['auth:api', 'verified']], function () {
+Route::group(['middleware' => [EnsureApiAuthenticated::class, EnsureEmailVerified::class]], function () {
     // Protected routes for verified users
+    Route::get('/user', [AuthController::class, 'getUserFromToken']);
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('refresh', [AuthController::class, 'refresh']);
 });
