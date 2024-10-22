@@ -5,31 +5,16 @@ namespace Modules\Exercise\Http\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Validation\Rule;
-use Modules\Exercise\Models\CustomizedExercise;
 
-class DeleteCustomizedExerciseRequest extends FormRequest
+class DeleteDefaultSystemExerciseRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
      */
     public function rules(): array
     {
-        $exercise = CustomizedExercise::find($this->id);
-
         return [
-            'id' => 'required|integer|exists:customized_exercises,id', // Validate that id exists in countries table
-            'user_id' => [
-                'required',
-                'integer',
-                Rule::exists('users', 'id'), // Ensure it exists in the users table
-                function ($attribute, $value, $fail) use ($exercise) {
-                    // Check if the user_id in the request matches the one in the exercise record
-                    if ($exercise && $exercise->user_id !== $this->user_id) {
-                        $fail('The provided user_id does not match the owner of the exercise.');
-                    }
-                },
-            ],
+            'id' => 'required|exists:exercise_system_defaults,id', // Validate the system ID
         ];
     }
 

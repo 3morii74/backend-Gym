@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('exercise_system_defaults', function (Blueprint $table) {
+        Schema::create('user_exercises', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique(); // e.g., Push, Pull, Arnold Split
-            $table->softDeletes();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('exercise_id')->constrained('default_exercises')->onDelete('cascade');
+            $table->foreignId('user_system_exercise_id')->constrained('user_system_exercises')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('exercise_system_defaults');
+        Schema::dropIfExists('user_exercises');
     }
 };

@@ -4,6 +4,7 @@ namespace Modules\Exercise\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\User\Models\User;
 
 class UserSystemExercise extends Model
 {
@@ -13,26 +14,14 @@ class UserSystemExercise extends Model
         'user_id',
         'exercise_system_default_id',
         'exercise_system_customized_id',
-        'exercise_id',
     ];
 
-    // public function user()
-    // {
-    //     return $this->belongsTo(User::class);
-    // }
-
-    public function exerciseSystemDefault()
+    public function exerciseSystem()
     {
-        return $this->belongsTo(ExerciseSystemDefault::class);
+        return $this->belongsTo(ExerciseSystemDefault::class, 'system_id');
     }
-
-    public function exerciseSystemCustomized()
+    public function userExercises()
     {
-        return $this->belongsTo(ExerciseSystemCustomized::class);
-    }
-
-    public function sets()
-    {
-        return $this->hasMany(Set::class);
+        return $this->hasMany(UserExercise::class, 'user_system_exercise_id');
     }
 }

@@ -13,11 +13,10 @@ return new class extends Migration
     {
         Schema::create('user_system_exercises', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Assuming systems are user-specific
             // Assuming system can be default or customized; using polymorphic relation or separate fields
             $table->foreignId('exercise_system_default_id')->nullable()->constrained('exercise_system_defaults')->onDelete('cascade');
             $table->foreignId('exercise_system_customized_id')->nullable()->constrained('exercise_system_customized')->onDelete('cascade');
-            $table->foreignId('exercise_id'); // Depending on the exercise type
             $table->softDeletes();
             $table->timestamps();
 

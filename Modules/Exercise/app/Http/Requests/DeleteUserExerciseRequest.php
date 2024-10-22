@@ -6,29 +6,31 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
-use Modules\Exercise\Models\CustomizedExercise;
 
-class DeleteCustomizedExerciseRequest extends FormRequest
+class DeleteUserExerciseRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
      */
     public function rules(): array
     {
-        $exercise = CustomizedExercise::find($this->id);
 
         return [
-            'id' => 'required|integer|exists:customized_exercises,id', // Validate that id exists in countries table
-            'user_id' => [
+            'user_id' => 'required|exists:users,id',
+            'system_id' => [
                 'required',
                 'integer',
-                Rule::exists('users', 'id'), // Ensure it exists in the users table
-                function ($attribute, $value, $fail) use ($exercise) {
-                    // Check if the user_id in the request matches the one in the exercise record
-                    if ($exercise && $exercise->user_id !== $this->user_id) {
-                        $fail('The provided user_id does not match the owner of the exercise.');
-                    }
-                },
+                Rule::exists('exercise_system_defaults', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at'); // Ensure the ID exists only in non-deleted rows
+                }),
+            ],
+            'exercise_ids' => 'required|array',
+            'exercise_ids.*' => [
+                'required',
+                'exists:default_exercises,id', // Ensure all exercise IDs exist in default_exercises
+                Rule::exists('user_exercises','exercise_id')->where(function ($query) {
+                    $query->where('user_id', $this->user_id); // Check if it exists in user_exercises for the specific user
+                }),
             ],
         ];
     }

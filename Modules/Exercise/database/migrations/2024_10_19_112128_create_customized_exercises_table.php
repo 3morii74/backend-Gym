@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('customized_exercises', function (Blueprint $table) {
             $table->id();
-           // $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Assuming exercises are user-specific
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Assuming exercises are user-specific
             $table->foreignId('muscle_id')->constrained('muscles')->onDelete('cascade');
             $table->string('name');
             $table->text('description')->nullable();

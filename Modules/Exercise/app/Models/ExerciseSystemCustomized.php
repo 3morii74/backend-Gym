@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Exercise\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -22,15 +23,15 @@ class ExerciseSystemCustomized extends Model
 
     public function customizedExercises()
     {
-        return $this->morphedByMany(CustomizedExercise::class, 'exerciseable', 'exercise_system_exercise');
+        return $this->morphedByMany(CustomizedExercise::class, 'exerciseable', 'exercise_system_exercise')->withTimestamps();
     }
 
     /**
      * Relationship: One-to-Many with UserSystemExercise
      * An ExerciseSystemCustomized can be associated with many UserSystemExercises.
      */
-    public function userSystemExercises()
-    {
-        return $this->hasMany(UserSystemExercise::class, 'system_id');
-    }
+    // public function userSystemExercises()
+    // {
+    //     return $this->hasMany(UserSystemExercise::class, 'system_id');
+    // }
 }

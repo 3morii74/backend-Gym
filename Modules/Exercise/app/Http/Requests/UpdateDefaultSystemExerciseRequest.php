@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
 
-class StoreCustomizedExerciseRequest extends FormRequest
+class UpdateDefaultSystemExerciseRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -15,29 +15,22 @@ class StoreCustomizedExerciseRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'id' => [
+                'required',
+                'integer',
+                Rule::exists('exercise_system_defaults')->where(function ($query) {
+                    $query->whereNull('deleted_at'); // Ensure the ID exists only in non-deleted rows
+                }),
+            ],
             'name' => [
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('customized_exercises')->whereNull('deleted_at'), // Check uniqueness only on non-deleted rows
+                Rule::unique('exercise_system_defaults')->whereNull('deleted_at')->ignore($this->id), // Ignore the current record based on the id from the request
             ],
-            'description' => 'nullable|string|max:1000',
-            'strength_percentage' => [
-                'required',          // Ensure it's required
-                'numeric',          // Ensure it's a number
-                'between:0,100',    // Ensure it falls between 0 and 100
-            ],
-            'muscle_id' => [
-                'required',
-                'integer', // Ensure it's an integer
-                Rule::exists('muscles', 'id')->whereNull('deleted_at'), // Ensure it exists in the muscle_categories table and is not soft-deleted            ],
-            ],
-            'user_id' => [
-                'required',
-                'integer', // Ensure it's an integer
-                Rule::exists('users', 'id')->whereNull('deleted_at'), // Ensure it exists in the users table
-            ],
+            'description' => 'nullable|string|max:1000', // Description is optional, max length of 1000
         ];
+
     }
 
     /**
@@ -47,7 +40,7 @@ class StoreCustomizedExerciseRequest extends FormRequest
     {
         return true;
     }
-    /**
+     /**
      * Handle a failed validation attempt.
      *
      * @param Validator $validator
@@ -62,7 +55,6 @@ class StoreCustomizedExerciseRequest extends FormRequest
             'message' => 'Validation failed!',
             'errors' => $errors,
             'status' => '422',
-
         ], 422));
     }
 }

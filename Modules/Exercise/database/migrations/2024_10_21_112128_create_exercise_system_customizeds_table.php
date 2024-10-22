@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('exercise_system_customized', function (Blueprint $table) {
             $table->id();
-           $table->foreignId('user_id'); // Assuming systems are user-specific
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Assuming systems are user-specific
             $table->string('name');
+            $table->text('description')->nullable();
             $table->timestamps();
             $table->softDeletes();
-            $table->unique(['name']);
         });
     }
 

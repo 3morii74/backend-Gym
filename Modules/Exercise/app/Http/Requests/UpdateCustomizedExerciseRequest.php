@@ -5,7 +5,9 @@ namespace Modules\Exercise\Http\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use Modules\Exercise\Models\CustomizedExercise;
 
 class UpdateCustomizedExerciseRequest extends FormRequest
 {
@@ -14,7 +16,15 @@ class UpdateCustomizedExerciseRequest extends FormRequest
      */
     public function rules(): array
     {
+        $exercise = CustomizedExercise::find($this->id);
         return [
+            'id' => [
+                'required',
+                'integer',
+                Rule::exists('customized_exercises')->where(function ($query) {
+                    $query->whereNull('deleted_at'); // Ensure the ID exists only in non-deleted rows
+                }),
+            ],
             'name' => [
                 'required',
                 'string',
@@ -41,6 +51,17 @@ class UpdateCustomizedExerciseRequest extends FormRequest
                     $query->whereNull('deleted_at'); // Ensure the ID exists only in non-deleted rows
                 }),
             ],
+            'user_id' => [
+                'required',
+                'integer',
+                Rule::exists('users', 'id'), // Ensure it exists in the users table
+                function ($attribute, $value, $fail) use ($exercise) {
+                    // Check if the user_id in the request matches the one in the exercise record
+                    if ($exercise && $exercise->user_id !== $this->user_id) {
+                        $fail('The provided user_id does not match the owner of the exercise.');
+                    }
+                },
+            ],
         ];
     }
 
@@ -51,7 +72,7 @@ class UpdateCustomizedExerciseRequest extends FormRequest
     {
         return true;
     }
-     /**
+    /**
      * Handle a failed validation attempt.
      *
      * @param Validator $validator

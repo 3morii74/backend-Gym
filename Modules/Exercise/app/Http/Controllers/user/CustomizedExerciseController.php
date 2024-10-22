@@ -25,6 +25,13 @@ class CustomizedExerciseController extends Controller
 
         return $this->apiResponse($exercises, 200, "Customized Exercises retrieved successfully.");
     }
+    public function getAllWithUsers()
+    {
+        // Fetch all customized exercises with the related users
+        $exercises = CustomizedExercise::with('user')->get();
+
+        return $this->apiResponse($exercises, 200, "Customized Exercises with Users retrieved successfully.");
+    }
 
     public function search(SearchMuscleRequest $request)
     {

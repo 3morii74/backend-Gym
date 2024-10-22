@@ -10,6 +10,9 @@ use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Modules\Exercise\Models\ExerciseSystemDefault;
+use Modules\Exercise\Models\UserExercise;
+use Modules\Exercise\Models\UserSystemExercise;
 
 class User  extends Authenticatable implements JWTSubject,  MustVerifyEmail
 {
@@ -103,5 +106,21 @@ class User  extends Authenticatable implements JWTSubject,  MustVerifyEmail
     public function setLastNameAttribute($value)
     {
         $this->attributes['last_name'] = ucfirst(strtolower($value));
+    }
+
+    public function exerciseSystems()
+    {
+        return $this->belongsToMany(ExerciseSystemDefault::class, 'user_system_exercises')
+            ->whereNull('user_system_exercises.deleted_at') // Exclude soft-deleted records
+            ->withTimestamps();
+    }
+    public function exerciseSystemsUser()
+    {
+        return $this->belongsToMany(UserSystemExercise::class, 'user_exercises')->withTimestamps();
+    }
+
+    public function userExercises()
+    {
+        return $this->hasMany(UserExercise::class, 'user_system_exercise_id');
     }
 }

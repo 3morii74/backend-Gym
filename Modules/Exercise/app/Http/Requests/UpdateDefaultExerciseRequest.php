@@ -16,6 +16,13 @@ class UpdateDefaultExerciseRequest extends FormRequest
     {
 
         return [
+            'id' => [
+                'required',
+                'integer',
+                Rule::exists('default_exercises')->where(function ($query) {
+                    $query->whereNull('deleted_at'); // Ensure the ID exists only in non-deleted rows
+                }),
+            ],
             'name' => [
                 'required',
                 'string',

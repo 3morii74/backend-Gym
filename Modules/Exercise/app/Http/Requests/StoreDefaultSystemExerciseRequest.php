@@ -7,35 +7,29 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
 
-class StoreCustomizedExerciseRequest extends FormRequest
+class StoreDefaultSystemExerciseRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
      */
     public function rules(): array
     {
+
         return [
             'name' => [
                 'required',
                 'string',
-                'max:255',
-                Rule::unique('customized_exercises')->whereNull('deleted_at'), // Check uniqueness only on non-deleted rows
+                'max:255', // Limit the maximum length of the name
+
             ],
-            'description' => 'nullable|string|max:1000',
-            'strength_percentage' => [
-                'required',          // Ensure it's required
-                'numeric',          // Ensure it's a number
-                'between:0,100',    // Ensure it falls between 0 and 100
+            'description' => [
+                'nullable',
+                'string',
+                'max:1000', // Limit the maximum length of the description
             ],
-            'muscle_id' => [
-                'required',
-                'integer', // Ensure it's an integer
-                Rule::exists('muscles', 'id')->whereNull('deleted_at'), // Ensure it exists in the muscle_categories table and is not soft-deleted            ],
-            ],
-            'user_id' => [
-                'required',
-                'integer', // Ensure it's an integer
-                Rule::exists('users', 'id')->whereNull('deleted_at'), // Ensure it exists in the users table
+            'default_exerciseId' => [
+                'required', // Ensure this field is required
+                Rule::exists('default_exercises', 'id')->whereNull('deleted_at'),
             ],
         ];
     }

@@ -14,6 +14,3 @@ use Modules\Exercise\Http\Controllers\ExerciseController;
 |
 */
 
-Route::group([], function () {
-    Route::resource('exercise', ExerciseController::class)->names('exercise');
-});

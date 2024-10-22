@@ -15,11 +15,15 @@ class DefaultExercise extends Model
 
     public function muscles()
     {
-        return $this->belongsToMany(Muscle::class, 'muscle_default_exercise', 'default_exercise_id', 'muscle_id');
+        return $this->belongsToMany(Muscle::class, 'muscle_default_exercise', 'default_exercise_id', 'muscle_id')->withTimestamps();
     }
 
     public function exerciseSystems()
     {
-        return $this->morphToMany(ExerciseSystemDefault::class, 'exerciseable', 'exercise_system_exercise');
+        return $this->morphToMany(ExerciseSystemDefault::class, 'exerciseable', 'exercise_system_exercise')->withTimestamps();
+    }
+    public function userExercise()
+    {
+        return $this->hasMany(UserExercise::class, 'id');
     }
 }

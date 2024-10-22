@@ -6,30 +6,24 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
-use Modules\Exercise\Models\CustomizedExercise;
 
-class DeleteCustomizedExerciseRequest extends FormRequest
+class UpdateUserExerciseRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
      */
     public function rules(): array
     {
-        $exercise = CustomizedExercise::find($this->id);
-
         return [
-            'id' => 'required|integer|exists:customized_exercises,id', // Validate that id exists in countries table
-            'user_id' => [
+            'id' => [
                 'required',
                 'integer',
-                Rule::exists('users', 'id'), // Ensure it exists in the users table
-                function ($attribute, $value, $fail) use ($exercise) {
-                    // Check if the user_id in the request matches the one in the exercise record
-                    if ($exercise && $exercise->user_id !== $this->user_id) {
-                        $fail('The provided user_id does not match the owner of the exercise.');
-                    }
-                },
-            ],
+                Rule::exists('user_system_exercises')->where(function ($query) {
+                    $query->whereNull('deleted_at'); // Ensure the ID exists only in non-deleted rows
+                }),
+            ], // Ensure the system exists
+            'exercise_ids' => 'required|array',                // Exercise IDs should be provided as an array
+            'exercise_ids.*' => 'exists:default_exercises,id',  // Each exercise ID must exist in the default_exercises table
         ];
     }
 
@@ -40,6 +34,7 @@ class DeleteCustomizedExerciseRequest extends FormRequest
     {
         return true;
     }
+
     /**
      * Handle a failed validation attempt.
      *
@@ -55,6 +50,7 @@ class DeleteCustomizedExerciseRequest extends FormRequest
             'message' => 'Validation failed!',
             'errors' => $errors,
             'status' => '405',
+
         ], 405));
     }
 }
