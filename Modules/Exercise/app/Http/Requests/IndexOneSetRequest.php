@@ -5,8 +5,9 @@ namespace Modules\Exercise\Http\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
-class StoreUserExerciseRequest extends FormRequest
+class IndexOneSetRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,10 +15,16 @@ class StoreUserExerciseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|exists:users,id',
-            'system_id' => 'required|exists:exercise_system_defaults,id',
-            'exercise_ids' => 'required|array',
-            'exercise_ids.*' => 'exists:default_exercises,id',
+            'id' => [
+                'required',
+                Rule::exists('sets', 'id')->whereNull('deleted_at'), // Ensure the user exists and is not soft deleted
+            ],
+            'user_id' => [
+                'required',
+                'exists:users,id',
+                Rule::exists('users', 'id')->whereNull('deleted_at'), // Ensure the user exists and is not soft deleted
+            ],
+
         ];
     }
 
@@ -28,7 +35,7 @@ class StoreUserExerciseRequest extends FormRequest
     {
         return true;
     }
-    /**
+     /**
      * Handle a failed validation attempt.
      *
      * @param Validator $validator
@@ -42,8 +49,7 @@ class StoreUserExerciseRequest extends FormRequest
             'success' => false,
             'message' => 'Validation failed!',
             'errors' => $errors,
-            'status' => '422',
-
-        ], 422));
+            'status' => '404'
+        ], 404));
     }
 }

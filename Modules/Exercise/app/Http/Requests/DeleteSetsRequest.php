@@ -5,8 +5,10 @@ namespace Modules\Exercise\Http\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
+use Modules\Exercise\Models\Set;
 
-class StoreUserExerciseRequest extends FormRequest
+class DeleteSetsRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,13 +16,21 @@ class StoreUserExerciseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|exists:users,id',
-            'system_id' => 'required|exists:exercise_system_defaults,id',
-            'exercise_ids' => 'required|array',
-            'exercise_ids.*' => 'exists:default_exercises,id',
+            'id' => [
+                'required',
+                Rule::exists('sets', 'id')->whereNull('deleted_at'), // Ensure the set exists and is not soft deleted
+            ],
+            'user_id' => [
+                'required',
+                Rule::exists('users', 'id')->whereNull('deleted_at'), // Ensure the user is not soft deleted
+                Rule::in([$this->getUserIdFromSet($this->id)]) // Ensure the user_id is the same as the one in the set
+            ],
         ];
     }
-
+    protected function getUserIdFromSet($setId)
+    {
+        return Set::where('id', $setId)->whereNull('deleted_at')->value('user_id'); // Fetch the user_id only if the set is not deleted
+    }
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -42,8 +52,7 @@ class StoreUserExerciseRequest extends FormRequest
             'success' => false,
             'message' => 'Validation failed!',
             'errors' => $errors,
-            'status' => '422',
-
-        ], 422));
+            'status' => '405',
+        ], 405));
     }
 }

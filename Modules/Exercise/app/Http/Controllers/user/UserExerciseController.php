@@ -62,52 +62,63 @@ class UserExerciseController extends Controller
                 ]);
             }
 
+            // Array to store newly created UserExercise records
+            $createdExercises = [];
+
             // Attach exercises to the user_system_exercise
             foreach ($request->exercise_ids as $exerciseId) {
-                // Check if the exercise is already attached
-                $existingUserExercise = UserExercise::where('user_id', $request->user_id)
-                    ->where('exercise_id', $exerciseId)
-                    ->where('user_system_exercise_id', $userSystemExercise->id)
-                    ->first();
+                $userExercise = UserExercise::create([
+                    'user_id' => $request->user_id,
+                    'exercise_id' => $exerciseId,
+                    'user_system_exercise_id' => $userSystemExercise->id,
+                ]);
 
-                // Only create a new UserExercise if it does not exist
-                if (!$existingUserExercise) {
-                    UserExercise::create([
-                        'user_id' => $request->user_id,
-                        'exercise_id' => $exerciseId,
-                        'user_system_exercise_id' => $userSystemExercise->id,
-                    ]);
-                }
+                // Add the created UserExercise record to the array
+                $createdExercises[] = $userExercise;
             }
 
-            return $this->apiResponse(null, 200, "Exercises attached successfully!");
+            return $this->apiResponse($createdExercises, 200, "Exercises attached successfully!");
         } catch (\Exception $e) {
             return $this->apiResponse(null, 500, "Error attaching exercises: " . $e->getMessage());
         }
     }
+
 
     public function update(UpdateUserExerciseRequest $request)
     {
         try {
             $userSystemExercise = UserSystemExercise::findOrFail($request->id);
 
-            // Detach current exercises
-            UserExercise::where('user_system_exercise_id', $userSystemExercise->id)->delete();
+            // Define the `created_at` timestamp you want to use for filtering (you might want to pass it in the request)
+            $createdAtTimestamp = $request->created_at; // Assume created_at is provided in the request
+
+            // Detach current exercises by matching `user_system_exercise_id` and `created_at`
+            UserExercise::where('user_system_exercise_id', $userSystemExercise->id)
+                ->where('created_at', $createdAtTimestamp)
+                ->delete();
+
+            // Array to store newly created UserExercise records
+            $createdExercises = [];
 
             // Attach new exercises
             foreach ($request->exercise_ids as $exerciseId) {
-                UserExercise::create([
+                $userExercise = UserExercise::create([
                     'user_id' => $userSystemExercise->user_id,
                     'exercise_id' => $exerciseId,
                     'user_system_exercise_id' => $userSystemExercise->id,
                 ]);
+
+                // Add the created UserExercise record to the array
+                $createdExercises[] = $userExercise;
             }
 
-            return $this->apiResponse(null, 200, "User's exercises updated successfully.");
+            return $this->apiResponse($createdExercises, 200, "User's exercises updated successfully.");
         } catch (\Exception $e) {
             return $this->apiResponse(null, 500, "Error updating user's exercises: " . $e->getMessage());
         }
     }
+
+
 
     public function detach(DeleteUserExerciseRequest $request)
     {

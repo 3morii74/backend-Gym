@@ -11,6 +11,7 @@ use Modules\Exercise\Http\Controllers\user\DefaultSystemExerciseController;
 use Modules\Exercise\Http\Controllers\user\MuscleCategoryController;
 use Modules\Exercise\Http\Controllers\user\MusclesController;
 use Modules\Exercise\Http\Controllers\user\UserExerciseController;
+use Modules\Exercise\Http\Controllers\user\UserSetsController;
 
 /*
  *--------------------------------------------------------------------------
@@ -75,3 +76,11 @@ Route::group(['prefix' => 'userExercise'], function () {
     Route::put("/update", [UserExerciseController::class, "update"]);
     Route::delete("/delete", [UserExerciseController::class, "detach"]);
 });
+Route::prefix('sets')->group(function () {
+    Route::get('/index', [UserSetsController::class, 'index']);
+    Route::get('/getOne', [UserSetsController::class, 'getOne']);
+    Route::post('/store', [UserSetsController::class, 'store']);
+    Route::put('/update', [UserSetsController::class, 'update']);
+    Route::delete('/delete', [UserSetsController::class, 'destroy']);
+});
+

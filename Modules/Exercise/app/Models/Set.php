@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Exercise\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,10 +10,10 @@ class Set extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    protected $fillable = ['user_system_exercise_id', 'reps', 'weight'];
+    protected $fillable = ['user_id', 'user_exercise_id', 'reps', 'weight'];
 
-    public function userSystemExercise()
+    public function userExercise()
     {
-        return $this->belongsTo(UserSystemExercise::class);
+        return $this->belongsTo(UserExercise::class);
     }
 }

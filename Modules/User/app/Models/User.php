@@ -13,12 +13,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Modules\Exercise\Models\ExerciseSystemDefault;
 use Modules\Exercise\Models\UserExercise;
 use Modules\Exercise\Models\UserSystemExercise;
+use Spatie\Permission\Traits\HasRoles;
 
 class User  extends Authenticatable implements JWTSubject,  MustVerifyEmail
 {
     use HasFactory;
     use SoftDeletes;
     use Notifiable;
+    use HasRoles;
 
     protected $fillable = [
         'first_name',
