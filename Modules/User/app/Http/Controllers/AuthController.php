@@ -16,6 +16,25 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class AuthController extends Controller
 {
     use ApiResponseTrait;
+    public function getUserFromToken(Request $request)
+    {
+        try {
+            // Get the user from the token
+            $user = JWTAuth::parseToken()->authenticate();
+
+            // Return the user data in the response
+            return response()->json([
+                'status' => 'success',
+                'data' => $user,
+            ], 200);
+        } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+            return response()->json(['error' => 'Token is expired'], 401);
+        } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+            return response()->json(['error' => 'Token is invalid'], 401);
+        } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
+            return response()->json(['error' => 'Token is missing'], 401);
+        }
+    }
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -56,22 +75,25 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
+        // Check if the user wants to stay logged in
+        if ($request->has('stay_logged_in') && $request->stay_logged_in) {
+            $expirationTime = 20160; // 14 days in minutes (14 * 24 * 60)
+        } else {
+            $expirationTime = 60; // 1 hour in minutes
+        }
+
+        // Set the token TTL (Time to Live)
+        auth()->factory()->setTTL($expirationTime);
+
         // Attempt to authenticate and get the token
         if (! $token = auth()->attempt($credentials)) {
             return $this->apiResponse(null, 401, "Unauthorized");
         }
 
-        // Check if the user wants to stay logged in
-        if ($request->has('stay_logged_in') && $request->stay_logged_in) {
-            $expirationTime = 20160; // 14 days in minutes (14 * 24 * 60)
-            auth()->factory()->setTTL($expirationTime);
-        } else {
-            $expirationTime = 60; // Set a shorter expiration time (e.g., 1 hour)
-            auth()->factory()->setTTL($expirationTime);
-        }
-
+        // Return the response with the generated token
         return $this->respondWithToken($token);
     }
+
     public function logout()
     {
         auth()->logout();

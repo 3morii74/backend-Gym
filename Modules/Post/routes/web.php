@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\User\Http\Controllers\UserController;
+use Modules\Post\Http\Controllers\PostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,3 +13,7 @@ use Modules\User\Http\Controllers\UserController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::group([], function () {
+    Route::resource('post', PostController::class)->names('post');
+});

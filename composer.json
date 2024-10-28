@@ -6,11 +6,15 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "intervention/image": "^3.8",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
         "laudis/neo4j-php-client": "^3.1",
         "nwidart/laravel-modules": "^11.1",
+        "php-ffmpeg/php-ffmpeg": "*",
+        "predis/predis": "^2.2",
         "rateb/structure": "^2.5",
+        "spatie/image": "^3.7",
         "tymon/jwt-auth": "^2.1"
     },
     "require-dev": {
