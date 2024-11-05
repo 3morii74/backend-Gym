@@ -36,7 +36,9 @@ class User  extends Authenticatable implements JWTSubject,  MustVerifyEmail
         'email_otp',
         'email_otp_expires_at',
         'password_reset_otp',
-        'password_reset_otp_expires_at'
+        'password_reset_otp_expires_at',
+        'social_id',
+        'social_type',
     ];
     protected $hidden = [
         'password',
@@ -125,4 +127,9 @@ class User  extends Authenticatable implements JWTSubject,  MustVerifyEmail
     {
         return $this->hasMany(UserExercise::class, 'user_system_exercise_id');
     }
+    /////////////////////////////////
+    //Sign Up and Login with google// 
+    /////////////////////////////////
+
+
 }

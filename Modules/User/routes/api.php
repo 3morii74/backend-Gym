@@ -3,7 +3,9 @@
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Laravel\Socialite\Facades\Socialite;
 use Modules\User\Http\Controllers\AuthController;
+use Modules\User\Http\Controllers\SocialiteController;
 use Modules\User\Http\Controllers\UserController;
 use Modules\User\Notifications\SendEmailOtpNotification;
 
@@ -18,6 +20,9 @@ Route::group(['middleware' => ['auth:api', 'verified']], function () {
 Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [AuthController::class, 'login'])->name('login');
     Route::post('register', [AuthController::class, 'register']);
+    Route::get('/redirect', [SocialiteController::class, 'redirectToGoogle']);
+    Route::get('/google/callback', [SocialiteController::class, 'handleGoogleCallback']);
+    Route::post('/exchange-code', [SocialiteController::class, 'exchangeAuthCode']);
 });
 Route::post('email/verify-otp', [AuthController::class, 'verifyOtp'])->middleware('auth:api');
 Route::post('email/resend-otp', function (Request $request) {
