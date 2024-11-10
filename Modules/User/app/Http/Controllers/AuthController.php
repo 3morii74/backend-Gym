@@ -97,7 +97,9 @@ class AuthController extends Controller
         // Check if the user is authenticated and their email is verified
         if ($data && !$data->hasVerifiedEmail()) {
             // Return a JSON response instead of redirecting
-            return response()->json(['token' => $token, 'error' => 'Email not verified.'], 403);
+            $data->generateOtp();
+            $data->sendEmailVerificationNotification();
+            return response()->json(['access_token' => $token, 'message' => 'Email not verified.'], 403);
         }
         // Return the response with the generated token
         return $this->respondWithToken($token, $data);

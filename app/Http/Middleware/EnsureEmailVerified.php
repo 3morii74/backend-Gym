@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Traits\ApiResponseTrait;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -9,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class EnsureEmailVerified
 {
+    use ApiResponseTrait;
     /**
      * Handle an incoming request.
      *
@@ -20,7 +22,7 @@ class EnsureEmailVerified
         // Check if the user is authenticated and their email is verified
         if ($user && !$user->hasVerifiedEmail()) {
             // Return a JSON response instead of redirecting
-            return response()->json(['error' => 'Email not verified.'], 403);
+            return $this->apiResponse($data = null, $status = 403, $message = 'Email not verified.');
         }
 
         return $next($request);
