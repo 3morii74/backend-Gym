@@ -5,6 +5,7 @@ namespace Modules\User\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -66,10 +67,13 @@ class AuthController extends Controller
             ]);
             $user->generateOtp();
             $user->sendEmailVerificationNotification();
+
             return $user;
         });
         $token = JWTAuth::fromUser($user);
-        return $this->apiResponse(['user' => $user, 'token' => $token], 201, "success");
+        return $this->respondWithToken($token, null);
+
+        // return $this->apiResponse(['user' => $user, 'token' => $token], 201, "success");
     }
     public function login(Request $request)
     {
@@ -89,9 +93,14 @@ class AuthController extends Controller
         if (! $token = auth()->attempt($credentials)) {
             return $this->apiResponse(null, 401, "Unauthorized");
         }
-
+        $data = Auth::guard('api')->user();
+        // Check if the user is authenticated and their email is verified
+        if ($data && !$data->hasVerifiedEmail()) {
+            // Return a JSON response instead of redirecting
+            return response()->json(['token' => $token, 'error' => 'Email not verified.'], 403);
+        }
         // Return the response with the generated token
-        return $this->respondWithToken($token);
+        return $this->respondWithToken($token, $data);
     }
 
     public function logout()
@@ -103,9 +112,17 @@ class AuthController extends Controller
     {
         return $this->respondWithToken(auth()->refresh());
     }
-    protected function respondWithToken($token)
+    protected function respondWithToken($token, $data = null)
     {
+        if ($data == null) {
+            return $this->apiResponse([
+                'access_token' => $token,
+                'token_type' => 'bearer',
+                'expires_in' => auth()->factory()->getTTL() * 60
+            ], 201, "success");
+        }
         return $this->apiResponse([
+            'user' => $data,
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60
