@@ -38,10 +38,10 @@ class StoreSetsRequest extends FormRequest
                         $fail('The selected user_exercise_id is invalid for the specified user_id.');
                     }
                 },
-                // Check if user_exercise_id is unique in sets table
-                Rule::unique('sets')->where(function ($query) {
-                    return $query->where('user_exercise_id', $this->input('user_exercise_id'));
-                })->whereNull('deleted_at'), // Include soft delete check
+                // // Check if user_exercise_id is unique in sets table
+                // Rule::unique('sets')->where(function ($query) {
+                //     return $query->where('user_exercise_id', $this->input('user_exercise_id'));
+                // })->whereNull('deleted_at'), // Include soft delete check
             ],
             'reps' => 'required|integer|min:1',
             'weight' => 'required|numeric|min:0',
