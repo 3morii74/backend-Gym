@@ -5,6 +5,7 @@ namespace Modules\Location\Http\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Auth;
 
 class StoreStateRequest extends FormRequest
 {
@@ -25,7 +26,9 @@ class StoreStateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        // Check if the authenticated user has the "store" role or permission
+        $user = Auth::user();
+        return $user && $user->can('store', 'api');
     }
 
 

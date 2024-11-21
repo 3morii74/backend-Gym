@@ -5,6 +5,7 @@ namespace Modules\Exercise\Http\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Auth;
 
 class DestroyMuscleRequest extends FormRequest
 {
@@ -24,7 +25,9 @@ class DestroyMuscleRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        // Check if the authenticated user has the "store" role or permission
+        $user = Auth::user();
+        return $user && $user->can('delete', 'api');
     }
      /**
      * Handle a failed validation attempt.
